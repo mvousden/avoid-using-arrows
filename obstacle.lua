@@ -13,11 +13,11 @@ setmetatable(Obstacle, {
                    return self
                 end})
 
-function Obstacle:initialise()
+function Obstacle:initialise(position, velocity)
    -- Instantiate obstacle properties. Returns nothing.
 
    -- Initialise position and velocity.
-   Translator.initialise(self, {0.2, 0.3}, {-1, -1})
+   Translator.initialise(self, position, velocity)
 
    -- Maximise velocity
    Translator.truncate_velocity(self, true)

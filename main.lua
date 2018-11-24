@@ -5,7 +5,12 @@ require("player")
 
 function love.load()
    player = Player()
-   obstacle = Obstacle()
+   obstacles = {}
+   for obstacleNumber = 1, 5 do
+      local initPosition = {math.random(), math.random()}
+      local initVelocity = {math.random() * 2 - 1, math.random() * 2 - 1}
+      table.insert(obstacles, Obstacle(initPosition, initVelocity))
+   end
 end
 
 function love.draw()
@@ -14,7 +19,9 @@ function love.draw()
    love.graphics.rectangle("fill", 0, 0, domainSize, domainSize)
 
    player:draw(domainSize)
-   obstacle:draw(domainSize)
+   for _, obstacle in pairs(obstacles) do
+      obstacle:draw(domainSize)
+   end
 end
 
 function love.update(dt)
@@ -45,6 +52,8 @@ function love.update(dt)
    -- Update player
    player:update(dt)
 
-   -- Update obstacle
-   obstacle:update(dt)
+   -- Update obstacles
+   for _, obstacle in pairs(obstacles) do
+      obstacle:update(dt)
+   end
 end
