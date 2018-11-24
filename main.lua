@@ -1,8 +1,11 @@
 require("math")
+require("obstacle")
 require("player")
+
 
 function love.load()
    player = Player()
+   obstacle = Obstacle()
 end
 
 function love.draw()
@@ -11,6 +14,7 @@ function love.draw()
    love.graphics.rectangle("fill", 0, 0, domainSize, domainSize)
 
    player:draw(domainSize)
+   obstacle:draw(domainSize)
 end
 
 function love.update(dt)
@@ -40,4 +44,7 @@ function love.update(dt)
 
    -- Update player
    player:update(dt)
+
+   -- Update obstacle
+   obstacle:update(dt)
 end

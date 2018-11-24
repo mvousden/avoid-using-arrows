@@ -13,18 +13,38 @@ setmetatable(Translator, {
                    return self
                 end,})
 
-function Translator:initialise(position, velocity, radius)
+function Translator:initialise(position, velocity)
    -- Instantiates translator properties. Arguments:
    --  - position: Initial position of translator, in "fractions of domain".
    --  - velocity: Initial velocity of translator, in "fractions of domain" per
    --    second.
-   --  - radius: Radius of circular bounding box, in "fractions of domain".
    -- Returns nothing.
    self.position = position
    self.velocity = velocity
    self.maxSpeed = 0.5  -- Velocity magnitude limit, above which normalisation
                         -- occurs.
    self.radius = 0.02
+end
+
+function Translator:compute_speed()
+   -- Returns the speed of the translator, in "fractions of domain" per second.
+   return math.sqrt(math.pow(self.velocity[1], 2) +
+                       math.pow(self.velocity[2], 2))
+end
+
+function Translator:truncate_velocity(maximise)
+   -- Truncates the velocity of the translator to its maximum, if
+   -- excessive. Arguments:
+   --  - maximise: If true, sets the velocity vector such that speed=1
+   --    regardless of the current speed.
+   -- Returns nothing.
+   local speed = self:compute_speed()
+   if speed > self.maxSpeed or maximise then
+      local normalisation = self.maxSpeed / speed
+      for index = 1, 2 do
+         self.velocity[index] = self.velocity[index] * normalisation
+      end
+   end
 end
 
 function Translator:update(dt)

@@ -20,7 +20,7 @@ function Player:initialise()
    -- the size of the domain. Returns nothing.
 
    -- Initialise position and velocity.
-   Translator:initialise({0.5, 0.5}, {0, 0})
+   Translator.initialise(self, {0.5, 0.5}, {0, 0})
 
    -- Translation control properties:
    self.accelerating = 0  -- 0 if not accelerating, 1 if accelerating, -1 if
@@ -95,14 +95,7 @@ function Player:update(dt)
                           self.accelerating * math.sin(self.angle) * dt)
 
    -- Normalise player velocity, if too great.
-   local playerSpeed = math.sqrt(math.pow(self.velocity[1], 2) +
-                                    math.pow(self.velocity[2], 2))
-   if playerSpeed > self.maxSpeed then
-      local normalisation = self.maxSpeed / playerSpeed
-      for index = 1, 2 do
-         self.velocity[index] = self.velocity[index] * normalisation
-      end
-   end
+   Translator.truncate_velocity(self)
 
    -- Apply rudimentary friction. This implementation is very basic; if the
    -- player is not accelerating, their velocity decays in time.
@@ -113,5 +106,5 @@ function Player:update(dt)
    end
 
    -- Use velocity to update position.
-   Translator:update(dt)
+   Translator.update(self, dt)
 end
