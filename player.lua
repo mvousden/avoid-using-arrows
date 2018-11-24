@@ -2,29 +2,29 @@
 -- tank-like sliding entity.
 
 require("math")
+require("translator")
 
 Player = {}
 Player.__index = Player
 
-function Player:create()
-   -- Creates, initialises, then returns a player instance.
-   local player = {}
-   setmetatable(player, Player)
-   player:initialise()
-   return player
-end
+setmetatable(Player, {
+                __index = Translator,
+                __call = function (cls, ...)
+                   local self = setmetatable({}, cls)
+                   self:initialise(...)
+                   return self
+                end})
 
 function Player:initialise()
    -- Instantiate player properties. Quantities are normalised with respect to
    -- the size of the domain. Returns nothing.
 
-   -- Translation properties:
-   self.position = {0.5, 0.5}  -- In "fraction of domain"
-   self.velocity = {0, 0}  -- In "fraction of domain" per second.
+   -- Initialise position and velocity.
+   Translator:initialise({0.5, 0.5}, {0, 0})
+
+   -- Translation control properties:
    self.accelerating = 0  -- 0 if not accelerating, 1 if accelerating, -1 if
                           -- deccelerating.
-   self.maxSpeed = 0.5  -- Velocity magnitude limit, above which normalisation
-                        -- occurs.
    self.maxAcceleration = 1
 
    -- Rotation properties:
@@ -33,8 +33,7 @@ function Player:initialise()
    self.angle = math.pi / 2  -- Starts facing "up", in radians.
    self.maxRotationSpeed = math.pi * 2  -- In radians per second.
 
-   -- Properties that determine size:
-   self.radius = 0.02
+   -- For drawing the little red ball for the "facing" direction.
    self.headRadius = self.radius / 3
 end
 
@@ -114,7 +113,5 @@ function Player:update(dt)
    end
 
    -- Use velocity to update position.
-   for index = 1, 2 do
-      self.position[index] = self.position[index] + self.velocity[index] * dt
-   end
+   Translator:update(dt)
 end

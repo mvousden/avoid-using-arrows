@@ -1,8 +1,8 @@
 require("math")
-playerLib = require("player")
+require("player")
 
 function love.load()
-   player = Player:create()
+   player = Player()
 end
 
 function love.draw()
