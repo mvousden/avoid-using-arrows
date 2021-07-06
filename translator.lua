@@ -58,10 +58,10 @@ function Translator:update(dt)
    -- into bounds.
    for index = 1, 2 do
       if self.position[index] > 1 - self.radius then
-         self.position[index] = 2 - self.radius * 2 - self.position[index]
+         self.position[index] = 1 - self.radius
          self.velocity[index] = -self.velocity[index]
       elseif self.position[index] < self.radius then
-         self.position[index] = self.position[index] + self.radius
+         self.position[index] = self.radius
          self.velocity[index] = -self.velocity[index]
       end
    end
