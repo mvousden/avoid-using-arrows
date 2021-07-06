@@ -14,13 +14,19 @@ setmetatable(Obstacle, {
                 end})
 
 function Obstacle:initialise(position, velocity)
-   -- Instantiate obstacle properties. Returns nothing.
-
    -- Initialise position and velocity.
    Translator.initialise(self, position, velocity)
 
-   -- Maximise velocity
-   Translator.truncate_velocity(self, true)
+   -- Instantiate obstacle properties. Returns nothing.
+   self.maxSpeed = self.maxSpeed / 2
+   self.radius = self.radius * 2
+
+   -- Don't exceed maximum velocity to start with
+   Translator.truncate_velocity(self)
+
+   -- A flag to denote whether this obstacle has been updated based off a
+   -- collision in this iteration.
+   self.updated = false
 end
 
 function Obstacle:draw(domainSize)

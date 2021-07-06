@@ -29,7 +29,7 @@ end
 function Translator:compute_speed()
    -- Returns the speed of the translator, in "fractions of domain" per second.
    return math.sqrt(math.pow(self.velocity[1], 2) +
-                       math.pow(self.velocity[2], 2))
+                    math.pow(self.velocity[2], 2))
 end
 
 function Translator:truncate_velocity(maximise)

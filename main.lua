@@ -1,4 +1,6 @@
 require("math")
+
+require("collisions")
 require("obstacle")
 require("player")
 
@@ -11,6 +13,30 @@ function love.load()
       local initVelocity = {math.random() * 2 - 1, math.random() * 2 - 1}
       table.insert(obstacles, Obstacle(initPosition, initVelocity))
    end
+
+   -- Along horizontal axis
+   --table.insert(obstacles, Obstacle({0.1, 0.5}, {0.1, 0}))
+   --table.insert(obstacles, Obstacle({0.9, 0.5}, {-0.1, 0}))
+
+   -- Along vertical axis
+   --table.insert(obstacles, Obstacle({0.5, 0.1}, {0, 0.1}))
+   --table.insert(obstacles, Obstacle({0.5, 0.9}, {0, -0.1}))
+
+   -- Along negative diagonal
+   --table.insert(obstacles, Obstacle({0.1, 0.1}, {0.1, 0.1}))
+   --table.insert(obstacles, Obstacle({0.9, 0.9}, {-0.1, -0.1}))
+
+   -- Catchup (1d, positive diagonal)
+   --table.insert(obstacles, Obstacle({0.9, 0.1}, {-0.1, 0.1}))
+   --table.insert(obstacles, Obstacle({0.5, 0.5}, {0.0, 0.0}))
+
+   -- Cross-bounce
+   --table.insert(obstacles, Obstacle({0.1, 0.1}, {0.1, 0.1}))
+   --table.insert(obstacles, Obstacle({0.9, 0.1}, {-0.1, 0.1}))
+
+   -- Weird Y-shape
+   --table.insert(obstacles, Obstacle({0.5, 0.9}, {0.0, -0.1}))
+   --table.insert(obstacles, Obstacle({0.9, 0.1}, {-0.1, 0.1}))
 end
 
 function love.draw()
@@ -49,11 +75,18 @@ function love.update(dt)
    player:accelerate(accelerate)
    player:rotate(rotate)
 
+   -- Detect translator collisions, and update those translators accordingly.
+   update_collisions(player, obstacles, dt)
+
    -- Update player
    player:update(dt)
 
-   -- Update obstacles
+   -- Update obstacles that have not been updated by collision detection.
    for _, obstacle in pairs(obstacles) do
-      obstacle:update(dt)
+      if not obstacle.updated then
+         obstacle:update(dt)
+      else
+         obstacle.updated = false
+      end
    end
 end
