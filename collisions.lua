@@ -22,7 +22,6 @@ function update_collisions(player, obstacles, dt)
    for outerKey, outer in pairs(obstacles) do
       for innerKey, inner in pairs(obstacles) do
          if outerKey < innerKey and overlapping(inner, outer) then
-            -- print("boing!")
             table.insert(collisions, {inner, outer})
          end
       end
@@ -34,29 +33,14 @@ function update_collisions(player, obstacles, dt)
       local inner = collisions[1]
       local outer = collisions[2]
 
-      -- print(string.format("Resolving collision between:\n" ..
-      --                     " - px=%f, py=%f, vx=%f, vy=%f\n" ..
-      --                     " - px=%f, py=%f, vx=%f, vy=%f\n" ..
-      --                     "with distance %f (crit=%f).",
-      --                     inner.position[1], inner.position[2],
-      --                     inner.velocity[1], inner.velocity[2],
-      --                     outer.position[1], outer.position[2],
-      --                     outer.velocity[1], outer.velocity[2],
-      --                     collision_distance(inner, outer),
-      --                     inner.radius + outer.radius))
-
       -- Tersely put, we swap the velocity components parallel to the axis of
       -- the collision of the two bodies. Precompute where possible.
-      local transformAngle = -math.atan2(inner.velocity[2] - outer.velocity[2],
-                                         inner.velocity[1] - outer.velocity[1])
-      -- print(string.format("Collision is at an angle of %f degrees.",
-      --                     transformAngle * 180 / math.pi))
+      local transformAngle = -math.atan2(inner.position[2] - outer.position[2],
+                                         inner.position[1] - outer.position[1])
       local cosT = math.cos(transformAngle)
       local cosTT = cosT * cosT
       local sinT = math.sin(transformAngle)
       local sinTT = sinT * sinT
-      -- print(string.format("cosT = %f\n" ..
-      --                     "sinT = %f", cosT, sinT))
 
       -- Compute velocities as a copy
       local oldParaInner =
@@ -91,33 +75,10 @@ function update_collisions(player, obstacles, dt)
       -- Update the two collided translators far enough so that they don't
       -- re-collide immediately. It's a hack, but a glorious one.
       while overlapping(inner, outer) do
-         -- print(string.format("Translators now have:\n" ..
-         --                     " - px=%f, py=%f, vx=%f, vy=%f\n" ..
-         --                     " - px=%f, py=%f, vx=%f, vy=%f\n" ..
-         --                     "with distance %f.",
-         --                     inner.position[1], inner.position[2],
-         --                     inner.velocity[1], inner.velocity[2],
-         --                     outer.position[1], outer.position[2],
-         --                     outer.velocity[1], outer.velocity[2],
-         --                     collision_distance(inner, outer)))
-         -- print("Forcing away...")
          inner:update(dt)
          outer:update(dt)
          inner.updated = true
          outer.updated = true
       end
-
-      -- print(string.format("Translators now have:\n" ..
-      --                     " - px=%f, py=%f, vx=%f, vy=%f\n" ..
-      --                     " - px=%f, py=%f, vx=%f, vy=%f\n" ..
-      --                     "with distance %f.",
-      --                     inner.position[1], inner.position[2],
-      --                     inner.velocity[1], inner.velocity[2],
-      --                     outer.position[1], outer.position[2],
-      --                     outer.velocity[1], outer.velocity[2],
-      --                     collision_distance(inner, outer)))
-      -- print("=====")
-
-      -- io.read()
    end
 end

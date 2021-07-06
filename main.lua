@@ -37,6 +37,11 @@ function love.load()
    -- Weird Y-shape
    --table.insert(obstacles, Obstacle({0.5, 0.9}, {0.0, -0.1}))
    --table.insert(obstacles, Obstacle({0.9, 0.1}, {-0.1, 0.1}))
+
+   -- Slice
+   --table.insert(obstacles, Obstacle({0.7, 0.9}, {-0.04, -0.1}))
+   --table.insert(obstacles, Obstacle({0.3, 0.1}, {0.04, 0.1}))
+
 end
 
 function love.draw()
